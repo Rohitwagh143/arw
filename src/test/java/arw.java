@@ -91,6 +91,4 @@ public class arw {
         driver.quit();
     }
 
-//    WebDriver driver = new ChromeDriver();
-//    driver.get('https://google.com')
 }
