@@ -46,8 +46,9 @@ public class arw {
         switchTab(0);
         fillUserInfomation(MfaCode);
         logIn();
-        Thread.sleep(5000);
+        clickOnDemoPage();
     }
+
 
     public void ifMfaCodeIsValid() throws InterruptedException {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//span[@id='ttl'])")));
@@ -72,6 +73,18 @@ public class arw {
     public void logIn(){
         driver.findElement(By.xpath("//a[@id='log-in']")).click();
     }
+
+    public void clickOnDemoPage()
+    {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[normalize-space()='Demo Page']")));
+        driver.findElement(By.xpath("//a[normalize-space()='Demo Page']")).click();
+    }
+
+    public void fillDemoPage()
+    {
+
+    }
+
 
     @AfterMethod
     public void closeWeb(){
