@@ -1,5 +1,6 @@
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -8,21 +9,18 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 
 public class arw {
     protected static WebDriver driver;
-    protected static JavascriptExecutor js;
     protected static WebDriverWait wait;
-    @BeforeTest
+    @BeforeMethod
     public void webSetup(){
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        js = (JavascriptExecutor) driver;
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get("https://seleniumbase.io/realworld");
         wait = new WebDriverWait(driver, 15);
@@ -35,14 +33,18 @@ public class arw {
         Thread.sleep(1000);
     }
 
+    public void clickOnGetMfeGetDetailLink()
+    {
+        driver.findElement(By.xpath("//a[normalize-space()='seleniumbase.io/realworld/signup']")).click();
+    }
 
     @Test
     public void logInPage() throws InterruptedException{
-        driver.findElement(By.xpath("//a[normalize-space()='seleniumbase.io/realworld/signup']")).click();
+        clickOnGetMfeGetDetailLink();
         switchTab(1);
         ifMfaCodeIsValid();
         String MfaCode=GetMfaCode();
-        System.out.println(MfaCode);
+//        System.out.println(MfaCode);
         switchTab(0);
         fillUserInfomation(MfaCode);
         logIn();
@@ -54,9 +56,10 @@ public class arw {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//span[@id='ttl'])")));
         String MfaCodeTime = driver.findElement(By.xpath("//span[@id='ttl']")).getText();
         int time=Integer.parseInt(MfaCodeTime);
-        System.out.println("time reaming : "+time);
+//        System.out.println("time reaming : "+time);
         if(time<8){
-            Thread.sleep(8000);
+            Thread.sleep((time*1000)+1000);
+            ifMfaCodeIsValid();
         }
     }
 
@@ -77,6 +80,8 @@ public class arw {
     public void clickOnDemoPage()
     {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[normalize-space()='Demo Page']")));
+        wait.until(ExpectedConditions.elementToBeSelected(By.xpath("//a[normalize-space()='Demo Page']")));
+
         driver.findElement(By.xpath("//a[normalize-space()='Demo Page']")).click();
     }
 
