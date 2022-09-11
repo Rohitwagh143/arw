@@ -1,4 +1,5 @@
 import org.junit.Assert;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -10,6 +11,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import org.testng.annotations.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
+
+//import static javax.management.MBeanServerFactory.builder;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
@@ -118,13 +121,13 @@ public class arw {
 
     public void fillDemoPage() throws InterruptedException {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h1[normalize-space()='Demo Page']")));
-        fillFirstTextInputField();
-        fillSecondTextInputField();
-        fillPrefilledTextField();
-        clickButton("Purple");
-        clickButton("Green");
-        placeHolderText();
-        clickOnSVG();
+//        fillFirstTextInputField();
+//        fillSecondTextInputField();
+//        fillPrefilledTextField();
+//        clickButton("Purple");
+//        clickButton("Green");
+//        placeHolderText();
+//        clickOnSVG();
         scrollBarFull();
     }
 
@@ -177,7 +180,12 @@ public class arw {
 
     private void scrollBarFull() throws InterruptedException {
         WebElement scrollBar=driver.findElement(By.xpath("//input[@id='mySlider']"));
-        action.moveToElement(scrollBar).clickAndHold().moveByOffset(0,150).release().perform();
+        Dimension sliderWidth = scrollBar.getSize();
+        System.out.println(sliderWidth);
+//        action.moveToElement(scrollBar).clickAndHold().moveByOffset(0,150).release().perform();
+        int numberOfRangeToDragTheSlider = +100;
+        action.moveToElement(scrollBar).clickAndHold().moveByOffset(numberOfRangeToDragTheSlider, 0)
+                .release().perform();
         Thread.sleep(3000);
     }
 
