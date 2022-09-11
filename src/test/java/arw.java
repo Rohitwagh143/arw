@@ -121,14 +121,16 @@ public class arw {
 
     public void fillDemoPage() throws InterruptedException {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h1[normalize-space()='Demo Page']")));
-//        fillFirstTextInputField();
-//        fillSecondTextInputField();
-//        fillPrefilledTextField();
-//        clickButton("Purple");
-//        clickButton("Green");
-//        placeHolderText();
-//        clickOnSVG();
-        scrollBarFull();
+        fillFirstTextInputField();
+        fillSecondTextInputField();
+        fillPrefilledTextField();
+        clickButton("Purple");
+        clickButton("Green");
+        placeHolderText();
+        clickOnSVG();
+        scrollBarFull(+100);
+        verifyProgressBar(100);
+
     }
 
 
@@ -178,15 +180,19 @@ public class arw {
     }
 
 
-    private void scrollBarFull() throws InterruptedException {
+    private void scrollBarFull(int numberOfRangeToDragTheSlider) throws InterruptedException {
         WebElement scrollBar=driver.findElement(By.xpath("//input[@id='mySlider']"));
         Dimension sliderWidth = scrollBar.getSize();
-        System.out.println(sliderWidth);
+//        System.out.println(sliderWidth);
 //        action.moveToElement(scrollBar).clickAndHold().moveByOffset(0,150).release().perform();
-        int numberOfRangeToDragTheSlider = +100;
         action.moveToElement(scrollBar).clickAndHold().moveByOffset(numberOfRangeToDragTheSlider, 0)
                 .release().perform();
-        Thread.sleep(3000);
+        Thread.sleep(700);
+    }
+
+    public void verifyProgressBar(int numberOfRangeToDragTheSlider){
+        WebElement progressBarXpath=driver.findElement(By.xpath("//label[@id='progressLabel']"));
+        verifyTextIsCorrect(progressBarXpath.getText(),"Progress Bar: ("+numberOfRangeToDragTheSlider+"%)");
     }
 
     @AfterMethod
