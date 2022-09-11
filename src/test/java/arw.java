@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import org.testng.annotations.*;
@@ -63,22 +64,13 @@ public class arw {
         fillDemoPage();
     }
 
-    public void getTitile() throws InterruptedException {
-        System.out.println(driver.getTitle());
-        switchTab(1);
-        driver.close();
-        switchTab(0);
-        driver.close();
-
-    }
-
 
     public void ifMfaCodeIsValid() throws InterruptedException {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//span[@id='ttl'])")));
         String MfaCodeTime = driver.findElement(By.xpath("//span[@id='ttl']")).getText();
         int time=Integer.parseInt(MfaCodeTime);
 //        System.out.println("time reaming : "+time);
-        if(time<8){
+        if(time<5){
             Thread.sleep((time*1000)+1000);
             ifMfaCodeIsValid();
         }
@@ -116,6 +108,8 @@ public class arw {
 
     public void verifyTextIsCorrect(String s1,String s2)
     {
+//        System.out.println(s1);
+//        System.out.println(s2);
         Assert.assertEquals(s1,s2);
     }
 
@@ -131,7 +125,15 @@ public class arw {
         scrollBarFull(+100);
         verifyProgressBar(100);
 
+        dropDown("75%");
+        verifyHTMLMeter("75%");
+        verifyIframeSrc();
+        verifyIframeText();
+        clickOnRadioButton();
+        checkBox();
+        dragAndDropImage();
     }
+
 
 
 
@@ -194,6 +196,85 @@ public class arw {
         WebElement progressBarXpath=driver.findElement(By.xpath("//label[@id='progressLabel']"));
         verifyTextIsCorrect(progressBarXpath.getText(),"Progress Bar: ("+numberOfRangeToDragTheSlider+"%)");
     }
+
+
+    public void dropDown(String percentage) throws InterruptedException {
+        Select dropDownXpath= new Select(driver.findElement(By.xpath("//select[@id='mySelect']")));
+        dropDownXpath.selectByValue(percentage);
+    }
+
+    public void verifyHTMLMeter(String percentage){
+        String HTMLMeter=driver.findElement(By.xpath("//label[@id='meterLabel']")).getText();
+        verifyTextIsCorrect(HTMLMeter,"HTML Meter: ("+percentage+")");
+    }
+
+    public void verifyIframeSrc(){
+        driver.switchTo().frame("myFrame1");
+        String src=driver.findElement(By.tagName("img")).getAttribute("src");
+        System.out.println(src);
+        checkTextFieldIsNotEmpty(src);
+    }
+
+    public void verifyIframeText(){
+        driver.switchTo().defaultContent();
+//        WebElement iFrame=driver.findElement(By.xpath("//iframe[@id='myFrame2']"));
+        driver.switchTo().frame("myFrame2");
+        String iFrameText=driver.findElement(By.tagName("h4")).getText();
+        verifyTextIsCorrect(iFrameText,"iFrame Text");
+    }
+
+    public void clickOnRadioButton() throws InterruptedException {
+        driver.switchTo().defaultContent();
+        WebElement radioButton1=driver.findElement(By.xpath("//input[@id='radioButton1']"));
+        WebElement radioButton2=driver.findElement(By.xpath("//input[@id='radioButton2']"));
+        radioButton2.click();
+        Thread.sleep(500);
+        radioButton1.click();
+    }
+
+    public void checkBox() {
+        WebElement checkBox1=driver.findElement(By.xpath("//input[@id='checkBox1']"));
+        WebElement checkBox2=driver.findElement(By.xpath("//input[@id='checkBox2']"));
+        WebElement checkBox3=driver.findElement(By.xpath("//input[@id='checkBox3']"));
+        WebElement checkBox4=driver.findElement(By.xpath("//input[@id='checkBox4']"));
+        WebElement checkBox5=driver.findElement(By.xpath("//input[@id='checkBox5']"));
+        clickOnCheckBox(checkBox1);
+        clickOnCheckBox(checkBox2);
+        clickOnCheckBox(checkBox3);
+        clickOnCheckBox(checkBox4);
+        clickOnCheckBox(checkBox5);
+        clickOnIFrameCheckBox();
+
+    }
+
+   public void clickOnCheckBox(WebElement element){
+       action.moveToElement(element).click().perform();
+   }
+
+   public void clickOnIFrameCheckBox() {
+        driver.switchTo().frame("myFrame3");
+        WebElement checkBox6=driver.findElement(By.xpath("//input[@id='checkBox6']"));
+        clickOnCheckBox(checkBox6);
+
+   }
+
+
+   public void dragAndDropImage() throws InterruptedException {
+       driver.switchTo().defaultContent();
+
+       WebElement From=driver.findElement(By.xpath("//img[@id='logo']"));
+
+       WebElement To=driver.findElement(By.xpath("//div[@id='drop2']"));
+
+       Action dragAndDrop = action.clickAndHold(From)
+               .moveToElement(To)
+               .release(To)
+               .build();
+
+//       action.dragAndDrop(From, To).build().perform();
+       dragAndDrop.perform();
+//       Thread.sleep(3000);
+   }
 
     @AfterMethod
     public void closeWeb(){
